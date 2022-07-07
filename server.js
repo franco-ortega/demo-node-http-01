@@ -37,7 +37,10 @@ const server3 = http.createServer(async (req, res) => {
 });
 
 //////////////////////////////////////////////////////////////////
+require('dotenv').config(); 
 const https = require('https');
+
+const potionsUrl = process.env.POTIONS_URL;
 
 const getData = async (url) => {
   await https
@@ -58,4 +61,4 @@ const getData = async (url) => {
     });
 };
 
-getData('https://agile-cove-58837.herokuapp.com/potions');
+getData(potionsUrl);
