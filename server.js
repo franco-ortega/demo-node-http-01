@@ -36,3 +36,22 @@ const server3 = http.createServer(async (req, res) => {
   res.end();
 });
 
+const https = require('https');
+
+https
+  .get('https://agile-cove-58837.herokuapp.com/potions', (res) => {
+    let data = '';
+
+    res.on('data', (chunk) => {
+      data += chunk;
+    });
+
+    res.on('end', () => {
+      const potions = JSON.parse(data);
+      console.log(potions);
+      //   console.log(data);
+    });
+  })
+  .on('error', (error) => {
+    console.log(error);
+  });
