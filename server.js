@@ -37,12 +37,13 @@ const server3 = http.createServer(async (req, res) => {
 });
 
 //////////////////////////////////////////////////////////////////
-require('dotenv').config(); 
+require('dotenv').config();
 const https = require('https');
-
 const potionsUrl = process.env.POTIONS_URL;
+// const potionsList = [];
 
 const getData = async (url) => {
+  const list = [];
   await https
     .get(url, (res) => {
       let data = '';
@@ -52,13 +53,50 @@ const getData = async (url) => {
       });
 
       res.on('end', () => {
-        const potions = JSON.parse(data);
-        console.log(potions);
+        const parsedData = JSON.parse(data);
+        list.push(...parsedData);
       });
     })
     .on('error', (error) => {
       console.log(error);
     });
+
+  return list;
 };
 
-getData(potionsUrl);
+const potions = getData(potionsUrl);
+console.log('IMMEDIATE POTIONS');
+console.log(potions);
+
+setTimeout(() => {
+    console.log('POTIONS AFTER 5 seconds:');
+    console.log(potions);
+}, 5000);
+
+
+// Do other stuff with potions
+
+
+
+
+
+
+
+
+
+// setTimeout(() => {
+//     console.log('LATER')
+//     // console.log(potionsList)
+//     console.log('FIRST ITEM AFTER 5 seconds: ', potionsList[0]);
+// }, 5000);
+
+// console.log('FIRST ITEM: ', potionsList[0]);
+
+// Do other stuff with potionsList
+
+// http
+//   .createServer((req, res) => {
+//     res.writeHead(200, { 'Content-type': 'application/json' });
+//     res.end(JSON.stringify({ hello: 'world' }));
+//   })
+//   .listen(1234, '127.0.0.1');
