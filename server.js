@@ -39,13 +39,12 @@ const server3 = http.createServer(async (req, res) => {
 //////////////////////////////////////////////////////////////////
 require('dotenv').config();
 const https = require('https');
+const { resolve } = require('path');
 const potionsUrl = process.env.POTIONS_URL;
-// const potionsList = [];
 
 const getData = async (url) => {
-  const list = [];
-  await https
-    .get(url, (res) => {
+  return new Promise((resolve, reject) => {
+    https.get(url, (res) => {
       let data = '';
 
       res.on('data', (chunk) => {
@@ -54,43 +53,24 @@ const getData = async (url) => {
 
       res.on('end', () => {
         const parsedData = JSON.parse(data);
-        list.push(...parsedData);
+        resolve(parsedData);
       });
-    })
-    .on('error', (error) => {
-      console.log(error);
-    });
 
-  return list;
+      res.on('error', (error) => {
+        // console.log(error);
+        reject(error);
+      });
+    });
+  });
 };
 
-const potions = getData(potionsUrl);
-console.log('IMMEDIATE POTIONS');
+
+const potions = getData(potionsUrl).then((res) => console.log(res));
+console.log('IMMEDIATE POTIONS - START');
 console.log(potions);
-
-setTimeout(() => {
-    console.log('POTIONS AFTER 5 seconds:');
-    console.log(potions);
-}, 5000);
+console.log('IMMEDIATE POTIONS - END');
 
 
-// Do other stuff with potions
-
-
-
-
-
-
-
-
-
-// setTimeout(() => {
-//     console.log('LATER')
-//     // console.log(potionsList)
-//     console.log('FIRST ITEM AFTER 5 seconds: ', potionsList[0]);
-// }, 5000);
-
-// console.log('FIRST ITEM: ', potionsList[0]);
 
 // Do other stuff with potionsList
 
